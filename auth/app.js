@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import morgan from 'morgan'
 
 import logger from './src/utils/logger';
 import connectToDatabase from './src/database/mongo';
@@ -10,11 +11,9 @@ const server = express();
 
 server.use(bodyParser.json());
 
-server.use('/', routes);
+server.use(morgan('[:method] - :url - :status in :response-time ms'))
 
-server.get('/url', (req, res) => {
-  res.json(['Tony', 'Lisa', 'Michael', 'Ginger', 'Food']);
-});
+server.use('/', routes);
 
 server.listen(3000, () => {
   logger.debug('Server running on port 3000');
