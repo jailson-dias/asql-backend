@@ -2,9 +2,9 @@ import logger from '../utils/logger';
 import UserModel from '../models/user.model';
 import formatResponse from '../utils/formatResponse';
 import { Error } from 'mongoose';
-import { filterKeysInObject } from '../utils/helpers'
+import { filterKeysInObject } from '../utils/helpers';
 
-const keysToReturn = ['fullname', 'username', 'email', 'role', '_id']
+const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];
 
 const createUser = ({ fullname, email, username, password, role }) => {
   const user = new UserModel({
@@ -12,15 +12,14 @@ const createUser = ({ fullname, email, username, password, role }) => {
     email,
     username,
     password,
-    role
+    role,
   });
 
-  return user.save().then(userSaved => {
-    logger.debug("Filtering user keys to return")
-    return filterKeysInObject(userSaved, keysToReturn)
-  })
+  return user.save().then((userSaved) => {
+    logger.debug('Filtering user keys to return');
+    return filterKeysInObject(userSaved, keysToReturn);
+  });
 };
-
 
 const formatValidationError = (mongoErros) => {
   const errorFields = Object.keys(mongoErros);
@@ -35,7 +34,7 @@ const formatValidationError = (mongoErros) => {
     message: formatedErrors,
   });
   return { statusCode: 400, response };
-}
+};
 
 const formatMongoError = (error) => {
   // if (error.code == "11000") {
@@ -52,7 +51,7 @@ const formatMongoError = (error) => {
   });
   // }
   return { statusCode: 400, response };
-}
+};
 
 const createRoute = (body) => {
   return createUser(body)
@@ -61,45 +60,46 @@ const createRoute = (body) => {
       logger.debug('User created successfully');
       return {
         statusCode: 200,
-        response
-      }
+        response,
+      };
     })
     .catch((error) => {
       let response = formatResponse({});
       let statusCode = 500;
       if (error instanceof Error.ValidationError) {
         return formatValidationError(error.errors);
-      } else if (error.name == "MongoError") {
+      } else if (error.name == 'MongoError') {
         return formatMongoError(error);
-      }
-      else {
+      } else {
         logger.error('Error creating user', error);
         response = formatResponse({
-          message: [{
-            message: "Error getting user"
-          }]
+          message: [
+            {
+              message: 'Error getting user',
+            },
+          ],
         });
       }
 
       return {
         statusCode,
-        response
-      }
+        response,
+      };
     });
 };
 
 export const createStudentRoute = (req, res) => {
-  const body = req.body || {}
-  body.role = "Student"
+  const body = req.body || {};
+  body.role = 'Student';
   createRoute(body).then(({ statusCode, response }) => {
     res.status(statusCode).json(response);
-  })
-}
+  });
+};
 
 export const createTeacherRoute = (req, res) => {
-  const body = req.body || {}
-  body.role = "Teacher"
+  const body = req.body || {};
+  body.role = 'Teacher';
   createRoute(body).then(({ statusCode, response }) => {
     res.status(statusCode).json(response);
-  })
-}
+  });
+};

@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import morgan from 'morgan'
+import morgan from 'morgan';
 
 import logger from './src/utils/logger';
 import connectToDatabase from './src/database/mongo';
@@ -11,7 +11,7 @@ const server = express();
 
 server.use(bodyParser.json());
 
-server.use(morgan('[:method] - :url - :status in :response-time ms'))
+server.use(morgan('[:method] - :url - :status in :response-time ms'));
 
 server.use('/', routes);
 

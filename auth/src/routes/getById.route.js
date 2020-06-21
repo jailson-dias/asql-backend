@@ -3,7 +3,7 @@ import userModel from '../models/user.model';
 import formatResponse from '../utils/formatResponse';
 import { CastError } from 'mongoose';
 
-const keysToReturn = ['fullname', 'username', 'email', 'role', '_id']
+const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];
 
 const getById = (id) => {
   return userModel
@@ -12,7 +12,7 @@ const getById = (id) => {
     .then((user) => {
       logger.debug(`User found successfully`);
       return user;
-    })
+    });
 };
 
 const getByIdRoute = (req, res) => {
@@ -29,17 +29,20 @@ const getByIdRoute = (req, res) => {
         logger.debug(`User ${error.value} was not found`);
         statusCode = 404;
         response = formatResponse({
-          message: [{
-            message: "User not found"
-          }],
+          message: [
+            {
+              message: 'User not found',
+            },
+          ],
         });
-      }
-      else {
+      } else {
         logger.error('Error getting user', error);
         response = formatResponse({
-          message: [{
-            message: "Error getting user"
-          }]
+          message: [
+            {
+              message: 'Error getting user',
+            },
+          ],
         });
       }
       res.status(statusCode).json(response);

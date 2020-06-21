@@ -2,7 +2,7 @@ import logger from '../utils/logger';
 import userModel from '../models/user.model';
 import formatResponse from '../utils/formatResponse';
 
-const keysToReturn = ['fullname', 'username', 'email', 'role', '_id']
+const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];
 
 const findUsers = () => {
   return userModel
@@ -11,7 +11,7 @@ const findUsers = () => {
     .then((users) => {
       logger.debug(`Found ${users.length} users successfully`);
       return users;
-    })
+    });
 };
 
 const listRoute = (req, res) => {

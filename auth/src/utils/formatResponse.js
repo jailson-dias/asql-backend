@@ -1,6 +1,6 @@
 const formatResponse = ({ message = [], data = {} }) => ({
   message,
-  data
+  data,
 });
 
 export default formatResponse;

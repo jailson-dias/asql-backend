@@ -1,12 +1,9 @@
 import express from 'express';
 import listRoute from './list.route';
 import getByIdRoute from './getById.route';
-import {
-    createStudentRoute,
-    createTeacherRoute
-} from './create.route';
+import { createStudentRoute, createTeacherRoute } from './create.route';
 import signin from './signin.route';
-import {verifyJWT} from '../utils/jwt'
+import { verifyJWT } from '../utils/jwt';
 
 const router = express.Router();
 
