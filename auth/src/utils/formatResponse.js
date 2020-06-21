@@ -1,7 +1,6 @@
-const formatResponse = ({ message = [], data = {}, token = null }) => ({
+const formatResponse = ({ message = [], data = {} }) => ({
   message,
-  data,
-  token,
+  data
 });
 
 export default formatResponse;

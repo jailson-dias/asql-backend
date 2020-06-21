@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import argon2 from 'argon2';
 import logger from '../utils/logger';
+import InvalidPassword from '../errors/invalidPassword'
 
 let Schema = mongoose.Schema;
 
@@ -66,11 +67,23 @@ let userSchema = new Schema({
 userSchema.pre('save', function (next) {
   if (this.isModified('password')) {
     argon2.hash(this.password).then((hash) => {
-      logger.debug('password hash', hash);
       this.password = hash;
+      next()
     });
+  } else {
+    next();
   }
-  return next();
 });
+
+userSchema.methods.comparePassword = function (password) {
+  return argon2.verify(this.password, password).then(validPassword => {
+    if (validPassword) {
+      logger.debug("valid password")
+      return this
+    }
+    logger.debug("invalid password")
+    throw new InvalidPassword()
+  })
+}
 
 export default mongoose.model('User', userSchema);
