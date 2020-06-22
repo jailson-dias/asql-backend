@@ -6,7 +6,7 @@ import logger from './src/utils/logger';
 import connectToDatabase from './src/database/mongo';
 import routes from './src/routes';
 
-connectToDatabase('mongodb://mongo:27017/database');
+connectToDatabase('mongodb://mongo:27017/auth');
 const server = express();
 
 server.use(bodyParser.json());

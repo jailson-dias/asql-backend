@@ -56,12 +56,10 @@ let userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  updated: [
-    {
-      type: Date,
-      default: Date.now,
-    },
-  ],
+  updated: {
+    type: [Date],
+    default: Date.now,
+  },
 });
 
 userSchema.pre('save', function (next) {
