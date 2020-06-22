@@ -27,13 +27,20 @@ services:
 
   auth:
     build: ./auth
-    # environment:
-    #   POSTGRES_USER: root
-    #   POSTGRES_PASSWORD: mysecretpassword
     ports:
       - "3000:3000"
     volumes:
       - ./auth:/app
+      - /app/node_modules
+    networks:
+      - asql-network
+
+  exercise:
+    build: ./exercise
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./exercise:/app
       - /app/node_modules
     networks:
       - asql-network
