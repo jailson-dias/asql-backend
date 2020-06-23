@@ -1,6 +1,6 @@
-import logger from '../utils/logger';
-import userModel from '../models/user.model';
-import formatResponse from '../utils/formatResponse';
+import logger from '../../utils/logger';
+import userModel from '../../models/user.model';
+import formatResponse from '../../utils/formatResponse';
 import { CastError } from 'mongoose';
 
 const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];

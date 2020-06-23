@@ -1,8 +1,8 @@
-import logger from '../utils/logger';
-import UserModel from '../models/user.model';
-import formatResponse from '../utils/formatResponse';
+import logger from '../../utils/logger';
+import UserModel from '../../models/user.model';
+import formatResponse from '../../utils/formatResponse';
 import { Error } from 'mongoose';
-import { filterKeysInObject } from '../utils/helpers';
+import { filterKeysInObject } from '../../utils/helpers';
 
 const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];
 

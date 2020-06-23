@@ -1,10 +1,10 @@
-import logger from '../utils/logger';
-import userModel from '../models/user.model';
-import formatResponse from '../utils/formatResponse';
-import InvalidPassword from '../errors/invalidPassword';
-import NotFound from '../errors/notFound';
-import { filterKeysInObject } from '../utils/helpers';
-import { generateToken } from '../utils/jwt';
+import logger from '../../utils/logger';
+import userModel from '../../models/user.model';
+import formatResponse from '../../utils/formatResponse';
+import InvalidPassword from '../../errors/invalidPassword';
+import NotFound from '../../errors/notFound';
+import { filterKeysInObject } from '../../utils/helpers';
+import { generateToken } from '../../utils/jwt';
 
 const keysToReturn = ['fullname', 'username', 'email', 'role', '_id'];
 
