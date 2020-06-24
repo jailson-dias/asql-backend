@@ -7,6 +7,7 @@ const connectToDatabase = (databaseURI) => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     })
     .then(() => {
       logger.debug('Connected to database successfully');

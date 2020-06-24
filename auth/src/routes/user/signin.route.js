@@ -16,6 +16,7 @@ const authenticate = ({ username, email, password = '' }) => {
   if (email) {
     userQuery = { ...userQuery, email };
   }
+  logger.debug('finding user', userQuery);
   return userModel
     .findOne(userQuery)
     .then((user) => {

@@ -1,16 +1,23 @@
 import express from 'express';
 import listRoute from './list.route';
-import getByIdRoute from './getById.route';
-import { createStudentRoute, createTeacherRoute } from './create.route';
-import signin from './signin.route';
-import { verifyJWT } from '../utils/jwt';
+import question from './question.route';
+import exercise from './exercise.route';
+// import signin from './signin.route';
+// import {verifyJWT} from '../utils/jwt'
 
 const router = express.Router();
 
-router.get('/', verifyJWT, listRoute);
-router.get('/:id', verifyJWT, getByIdRoute);
-router.post('/student', createStudentRoute);
-router.post('/teacher', createTeacherRoute);
-router.post('/signin', signin);
+// Exercise
+router.get('/', listRoute);
+router.post('/', exercise.create);
+router.get('/:exerciseId', exercise.getById);
+router.put('/:exerciseId', exercise.edit);
+router.delete('/:exerciseId', exercise.delete);
+
+// Question
+router.post('/:exerciseId/question', question.create);
+router.get('/:exerciseId/question/:questionId', question.getById);
+router.put('/:exerciseId/question/:questionId', question.edit);
+router.delete('/:exerciseId/question/:questionId', question.delete);
 
 export default router;

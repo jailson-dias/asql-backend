@@ -1,6 +1,6 @@
-import logger from '../utils/logger';
-import ExerciseModel from '../models/exercise.model';
-import formatResponse from '../utils/formatResponse';
+import logger from '../../utils/logger';
+import ExerciseModel from '../../models/exercise.model';
+import formatResponse from '../../utils/formatResponse';
 
 const listRoute = (req, res) => {
   ExerciseModel.find()

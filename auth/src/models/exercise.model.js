@@ -52,4 +52,16 @@ let exerciseSchema = new Schema({
   },
 });
 
+exerciseSchema.pre(
+  ['findOneAndUpdate', 'updateOne', 'findByIdAndUpdate'],
+  function (next) {
+    let updateObject = this.getUpdate();
+    updateObject['$push'] = updateObject['$push'] || {};
+    updateObject['$push']['updated'] = Date.now();
+
+    this.update(updateObject);
+    next();
+  }
+);
+
 export default mongoose.model('Exercise', exerciseSchema);
