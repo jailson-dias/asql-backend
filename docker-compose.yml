@@ -13,17 +13,29 @@ services:
     networks:
       - asql-network
 
-  # postgres:
-  #   image: postgres:alpine
-  #   # environment:
-  #   #   POSTGRES_USER: root
-  #   #   POSTGRES_PASSWORD: mysecretpassword
-  #   # ports:
-  #   #   - "5432:5432"
-  #   volumes:
-  #     - postgresdb:/var/lib/postgresql/data
-  #   networks:
-  #     - asql-network
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+    networks:
+      - asql-network
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+      MYSQL_DATABASE: "my_database"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysqldb:/var/lib/mysql
+    networks:
+      - asql-network
 
   auth:
     build: ./auth
@@ -181,3 +193,4 @@ networks:
 volumes:
     mongodb:
     postgresdb:
+    mysqldb:
