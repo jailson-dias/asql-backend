@@ -1,41 +1,21 @@
-const parser = require('pg-query-parser');
+import ParseStmtValues from '../../utils/parseStmtValues';
 
 class ParserDistinct {
   constructor(query) {
-    let parsed = parser.parse(query);
-    if (parsed.error) {
-      console.log('error parsing the query:', parsed.error.message);
-    }
-    this.query = parsed.query;
-  }
-
-  getDistinct() {
-    let distinctList = this.query || {};
-
-    if (!distinctList[0]) {
-      throw new Error("This isn't a distinct clause");
-    }
-    distinctList = distinctList[0];
-
-    if (!distinctList.SelectStmt) {
-      throw new Error("This isn't a distinct clause");
-    }
-    distinctList = distinctList.SelectStmt;
-
-    if (!distinctList.distinctClause) {
-      throw new Error("This isn't a distinct clause");
-    }
-
-    // console.log(distinctList.fromClause);
-    return distinctList.distinctClause;
+    this.parseStmtValues = new ParseStmtValues();
+    this.stmt = this.parseStmtValues.getStmt(query);
   }
 
   parseDistinct() {
     try {
-      return this.getDistinct();
+      if (!this.stmt.distinctClause) {
+        throw new Error("This isn't a distinct clause");
+      }
+
+      return this.stmt.distinctClause;
     } catch (err) {
       // console.log(err.message);
-      return null;
+      return err.message;
     }
   }
 }

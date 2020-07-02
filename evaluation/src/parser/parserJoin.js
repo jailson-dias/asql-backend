@@ -1,83 +1,26 @@
-const parser = require('pg-query-parser');
+import ParseStmtValues from '../../utils/parseStmtValues';
+import ParseBasicValues from '../../utils/parseBasicValues';
 
 class ParserJoin {
   constructor(query) {
-    let parsed = parser.parse(query);
-    this.query = parsed.query;
-  }
-
-  parseAExpr(aExpr) {
-    let name = aExpr.name.map((key) => key.String.str).join(' ');
-
-    let left = aExpr.lexpr.ColumnRef.fields
-      .map((field) => field.String.str)
-      .join('.');
-    let right = aExpr.rexpr.ColumnRef.fields
-      .map((field) => field.String.str)
-      .join('.');
-
-    return {
-      name,
-      left,
-      right,
-    };
-  }
-
-  parseQuals(quals) {
-    if (!quals) {
-      return [];
-    }
-    if (quals.BoolExpr) {
-      let expressions = quals.BoolExpr.args
-        .map((expr) => this.parseQuals(expr))
-        .flat();
-
-      let boolop = {
-        boolop: quals.BoolExpr.boolop,
-      };
-
-      let firstExpressions = expressions.slice(0, -1);
-      let lastExpression = expressions[expressions.length - 1];
-      return [...firstExpressions, boolop, lastExpression];
-    }
-
-    return [this.parseAExpr(quals.A_Expr)];
+    this.parseStmtValues = new ParseStmtValues();
+    this.parseBasicValues = new ParseBasicValues();
+    this.stmt = this.parseStmtValues.getStmt(query);
   }
 
   getJoin() {
-    let joinStmt = this.query || {};
-    if (!joinStmt[0]) {
+    let fromClause = this.stmt.fromClause;
+    if (!fromClause) {
       throw new Error("This isn't a join");
     }
-    joinStmt = joinStmt[0];
-    if (!joinStmt.SelectStmt) {
+    if (!fromClause[0]) {
       throw new Error("This isn't a join");
     }
-    joinStmt = joinStmt.SelectStmt;
-    if (!joinStmt.fromClause) {
+    fromClause = fromClause[0];
+    if (!fromClause.JoinExpr) {
       throw new Error("This isn't a join");
     }
-    joinStmt = joinStmt.fromClause;
-    if (!joinStmt[0]) {
-      throw new Error("This isn't a join");
-    }
-    joinStmt = joinStmt[0];
-    if (!joinStmt.JoinExpr) {
-      throw new Error("This isn't a join");
-    }
-    return joinStmt.JoinExpr;
-  }
-
-  parseTableName(table) {
-    let tableObject = {
-      tableName: table.relname,
-    };
-
-    if (table.alias) {
-      tableObject.asName = table.alias.Alias.aliasname;
-    }
-
-    return tableObject;
+    return fromClause.JoinExpr;
   }
 
   joinExpr(type, isCorrectJoinType = null) {
@@ -92,32 +35,26 @@ class ParserJoin {
         throw new Error("This isn't the correct join");
       }
 
-      const tableLeft = this.parseTableName(joinStmt.larg.RangeVar);
-
-      const tableRight = this.parseTableName(joinStmt.rarg.RangeVar);
-
-      let quals = this.parseQuals(joinStmt.quals);
-
       return {
-        left: tableLeft,
-        right: tableRight,
-        quals,
+        left: this.parseStmtValues.expr(joinStmt.larg),
+        right: this.parseStmtValues.expr(joinStmt.rarg),
+        quals: this.parseStmtValues.expr(joinStmt.quals),
       };
     } catch (err) {
       //   console.log(err.message);
-      return null;
+      return err.message;
     }
   }
 
-  join() {
+  parseJoin() {
     return this.joinExpr(0);
   }
 
-  inner() {
+  parseInner() {
     return this.joinExpr(0, (joinExpr) => joinExpr.quals != null);
   }
 
-  cross() {
+  parseCross() {
     return this.joinExpr(0, (joinExpr) => {
       return (
         !joinExpr.isNatural &&
@@ -127,15 +64,15 @@ class ParserJoin {
     });
   }
 
-  leftOuter() {
+  parseLeftOuter() {
     return this.joinExpr(1);
   }
 
-  fullOuter() {
+  parseFullOuter() {
     return this.joinExpr(2);
   }
 
-  rightOuter() {
+  parseRightOuter() {
     return this.joinExpr(3);
   }
 }

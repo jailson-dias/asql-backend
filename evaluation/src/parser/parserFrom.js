@@ -1,49 +1,36 @@
-const parser = require('pg-query-parser');
+import ParseStmtValues from '../../utils/parseStmtValues';
+import ParseBasicValues from '../../utils/parseBasicValues';
 
-class ParserJoin {
+class ParserFrom {
   constructor(query) {
-    let parsed = parser.parse(query);
-    this.query = parsed.query;
-  }
-
-  parseTableName(table) {
-    let tableObject = {
-      tableName: table.relname,
-    };
-
-    if (table.alias) {
-      tableObject.asName = table.alias.Alias.aliasname;
-    }
-
-    return tableObject;
+    this.parseStmtValues = new ParseStmtValues();
+    this.parseBasicValues = new ParseBasicValues();
+    this.stmt = this.parseStmtValues.getStmt(query);
   }
 
   getFrom() {
-    let joinStmt = this.query || {};
-    if (!joinStmt[0]) {
-      throw new Error("This isn't a join");
+    if (!this.stmt.fromClause) {
+      throw new Error("This isn't a from stmt");
     }
-    joinStmt = joinStmt[0];
-    if (!joinStmt.SelectStmt) {
-      throw new Error("This isn't a join");
-    }
-    joinStmt = joinStmt.SelectStmt;
-    if (!joinStmt.fromClause) {
-      throw new Error("This isn't a join");
-    }
-    return joinStmt.fromClause;
+    return this.stmt.fromClause;
   }
 
-  tableName() {
+  parseTableName() {
     try {
       let fromClause = this.getFrom();
+      // console.log('inicio', fromClause);
 
-      return fromClause.map((table) => this.parseTableName(table.RangeVar));
+      return fromClause.map((table) => {
+        if (table.JoinExpr) {
+          throw new Error("This isn't a from stmt");
+        }
+        return this.parseStmtValues.expr(table);
+      });
     } catch (err) {
-      //   console.log(err.message);
-      return null;
+      // console.log(err.message);
+      return err.message;
     }
   }
 }
 
-export default ParserJoin;
+export default ParserFrom;
