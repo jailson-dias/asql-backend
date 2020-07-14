@@ -34,7 +34,7 @@ class Route {
       logger.error('Unidentified error on question');
       logger.debug(error.stack);
 
-      message = [{ message: 'Unidentified rror on question' }];
+      message = [{ message: 'Unidentified error on question' }];
     }
     return { statusCode, message };
   }

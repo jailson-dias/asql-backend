@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import generate from 'nanoid/generate';
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 let Schema = mongoose.Schema;
 

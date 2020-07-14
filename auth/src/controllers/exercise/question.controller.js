@@ -1,32 +1,56 @@
 import logger from '../../utils/logger';
 import ExerciseModel from '../../models/exercise.model';
 import NotFound from '../../errors/notFound';
+import Database from './database';
 
 class Question {
-  static create(
-    exerciseId,
-    { description, teacherSolution }
-  ) {
+  static queryOnDatabase(exerciseId, query) {
+    logger.debug('querying solution on database');
+    return ExerciseModel.findOne({ _id: exerciseId }).then((exercise) => {
+      return Database.query(exercise.code, query);
+    });
+  }
+
+  static create(exerciseId, { description, teacherSolution }) {
     const question = {
       description,
-      teacherSolution
+      teacherSolution,
     };
 
     logger.debug('adding a question on', exerciseId);
 
-    return ExerciseModel.findByIdAndUpdate(
-      exerciseId,
-      {
-        $push: {
-          questions: question,
-        },
-      },
-      { new: true }
-    ).then((exercise) => {
-      if (!exercise) {
-        throw new NotFound('Exercise not found');
+    return new Promise(async (resolve, reject) => {
+      let solution = [];
+      let exercise = null;
+      try {
+        if (teacherSolution) {
+          solution = await Question.queryOnDatabase(exerciseId, teacherSolution);
+          logger.debug('sollll', solution)
+        }
+
+        logger.debug('solution', solution)
+
+        exercise = await ExerciseModel.findByIdAndUpdate(
+          exerciseId,
+          {
+            $push: {
+              questions: question,
+            },
+          },
+          { new: true }
+        );
+      } catch (err) {
+        logger.debug('teste');
+        reject(err);
       }
-      return exercise;
+
+      if (!exercise) {
+        reject(new NotFound('Exercise not found'));
+      }
+      resolve({
+        exercise,
+        solution,
+      });
     });
   }
 
@@ -44,11 +68,7 @@ class Question {
     });
   }
 
-  static edit(
-    exerciseId,
-    questionId,
-    { description, teacherSolution }
-  ) {
+  static edit(exerciseId, questionId, { description, teacherSolution }) {
     let questionFieldsToUpdate = {};
     if (description) {
       questionFieldsToUpdate['questions.$.description'] = description;

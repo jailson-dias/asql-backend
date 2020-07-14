@@ -38,15 +38,20 @@ class Database {
         );
       })
       .then(() => {
+        return db.query('COMMIT;');
+      })
+      .then(() => {
         logger.debug('successfully populate the database');
-        db.query('COMMIT;');
+        return {
+          message: 'Database populated successfully'
+        }
       })
       .catch((error) => {
         console.trace()
         logger.debug('error on script');
-        db.query('ROLLBACK;');
-
-        throw new Error('Error on script')
+        return db.query('ROLLBACK;').finally(() => {
+          throw new Error('Error on script')
+        })
       })
       .finally(() => {
         db.end();
@@ -55,10 +60,10 @@ class Database {
 
   static query(databaseName, query) {
     logger.debug(`Querying on database ${databaseName}`);
-    const db = new PostgreSQL(`baseConnectionString/${databaseName}`);
+    const db = new PostgreSQL(`${baseConnectionString}/${databaseName}`);
     return db.query(removeCommets(query))
       .catch((error) => {
-        logger.debug(error.stack)
+        console.trace()
         logger.debug('error on query');
         throw new Error('Error on query')
       })
