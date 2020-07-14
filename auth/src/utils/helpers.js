@@ -5,3 +5,6 @@ export const filterKeysInObject = (objectToFilter, keysToReturn) => {
   );
   return keysToReturn.reduce(reducerObject, {});
 };
+
+
+export const baseConnectionString = 'postgresql://root:mysecretpassword@postgres:5432';

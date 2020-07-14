@@ -1,26 +1,30 @@
 import ParseStmtValues from '../../utils/parseStmtValues';
 import ParseBasicValues from '../../utils/parseBasicValues';
 
-class ParserHaving {
+class ParserInto {
   constructor(query) {
     this.parseStmtValues = new ParseStmtValues();
     this.parseBasicValues = new ParseBasicValues();
     this.stmt = this.parseStmtValues.getStmt(query);
   }
 
-  getHaving() {
-    if (!this.stmt.havingClause) {
-      throw new Error("This isn't a having clause");
+  getInto() {
+    let intoClause = this.stmt.intoClause;
+    if (!intoClause) {
+      throw new Error("This isn't a into clause");
     }
 
-    return this.stmt.havingClause;
+    if (!intoClause.IntoClause) {
+      throw new Error("This isn't a into clause");
+    }
+
+    return intoClause.IntoClause;
   }
 
-  parserHaving() {
+  parseInto() {
     try {
-      let having = this.getHaving();
-      // console.log(having);
-      return this.parseStmtValues.expr(having);
+      let into = this.getInto();
+      return this.parseStmtValues.expr(into.rel);
     } catch (err) {
       // console.log(err.message);
       return err.message;
@@ -28,4 +32,4 @@ class ParserHaving {
   }
 }
 
-export default ParserHaving;
+export default ParserInto;

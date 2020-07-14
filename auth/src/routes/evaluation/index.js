@@ -1,4 +1,5 @@
 import express from 'express';
+import listRoute from './list.route';
 import question from './question.route';
 import exercise from './exercise.route';
 // import signin from './signin.route';
@@ -7,12 +8,11 @@ import exercise from './exercise.route';
 const router = express.Router();
 
 // Exercise
-router.get('/', exercise.list);
+router.get('/', listRoute);
 router.post('/', exercise.create);
 router.get('/:exerciseId', exercise.getById);
 router.put('/:exerciseId', exercise.edit);
 router.delete('/:exerciseId', exercise.delete);
-router.post('/:exerciseId/populate', exercise.populate);
 
 // Question
 router.post('/:exerciseId/question', question.create);

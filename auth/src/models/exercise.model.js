@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import shortid from 'shortid';
+import generate from 'nanoid/generate';
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 let Schema = mongoose.Schema;
 
@@ -8,7 +9,7 @@ let exerciseSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    default: shortid.generate,
+    default: () => generate(alphabet, 10),
   },
   title: {
     type: String,
@@ -18,6 +19,7 @@ let exerciseSchema = new Schema({
   },
   description: String,
   dateLimit: Date,
+  populationScript: String,
   teacher: {
     fullname: String,
     id: String,
@@ -32,7 +34,6 @@ let exerciseSchema = new Schema({
     {
       description: String,
       teacherSolution: String,
-      databaseLocation: String,
       resolutions: [
         {
           fullname: String,

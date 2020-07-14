@@ -1,31 +1,31 @@
 import ParseStmtValues from '../../utils/parseStmtValues';
 import ParseBasicValues from '../../utils/parseBasicValues';
 
-class ParserHaving {
+class ParserWhere {
   constructor(query) {
     this.parseStmtValues = new ParseStmtValues();
     this.parseBasicValues = new ParseBasicValues();
     this.stmt = this.parseStmtValues.getStmt(query);
   }
 
-  getHaving() {
-    if (!this.stmt.havingClause) {
-      throw new Error("This isn't a having clause");
+  getWhere() {
+    if (!this.stmt.whereClause) {
+      throw new Error("This isn't a where");
     }
-
-    return this.stmt.havingClause;
+    return this.stmt.whereClause;
   }
 
-  parserHaving() {
+  parseWhere() {
     try {
-      let having = this.getHaving();
-      // console.log(having);
-      return this.parseStmtValues.expr(having);
+      let where = this.getWhere();
+
+      // console.log(where);
+      return this.parseStmtValues.expr(where);
     } catch (err) {
-      // console.log(err.message);
+      // console.log(err.stack);
       return err.message;
     }
   }
 }
 
-export default ParserHaving;
+export default ParserWhere;

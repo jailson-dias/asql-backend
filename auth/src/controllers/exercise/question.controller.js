@@ -5,12 +5,11 @@ import NotFound from '../../errors/notFound';
 class Question {
   static create(
     exerciseId,
-    { description, teacherSolution, databaseLocation }
+    { description, teacherSolution }
   ) {
     const question = {
       description,
-      teacherSolution,
-      databaseLocation,
+      teacherSolution
     };
 
     logger.debug('adding a question on', exerciseId);
@@ -48,7 +47,7 @@ class Question {
   static edit(
     exerciseId,
     questionId,
-    { description, teacherSolution, databaseLocation }
+    { description, teacherSolution }
   ) {
     let questionFieldsToUpdate = {};
     if (description) {
@@ -57,10 +56,6 @@ class Question {
 
     if (teacherSolution) {
       questionFieldsToUpdate['questions.$.teacherSolution'] = teacherSolution;
-    }
-
-    if (databaseLocation) {
-      questionFieldsToUpdate['questions.$.databaseLocation'] = databaseLocation;
     }
 
     logger.debug(`editing question ${questionId} on ${exerciseId}`);

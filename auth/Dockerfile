@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12
 LABEL maintainer="jailson.diasc@gmail.com"
 
 WORKDIR /app

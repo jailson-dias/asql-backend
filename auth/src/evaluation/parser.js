@@ -1,6 +1,6 @@
-// import { DeepDiff } from 'deep-diff';
-// import ParseStmtValues from '../utils/parseStmtValues';
-// import changesets from 'diff-json';
+import { DeepDiff } from 'deep-diff';
+import ParseStmtValues from './utils/parseStmtValues';
+import changesets from 'diff-json';
 const diff = require('diff')
 
 const query1 = `
