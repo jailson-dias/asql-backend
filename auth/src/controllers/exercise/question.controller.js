@@ -25,10 +25,8 @@ class Question {
       try {
         if (teacherSolution) {
           solution = await Question.queryOnDatabase(exerciseId, teacherSolution);
-          logger.debug('sollll', solution)
+          solution = solution.rows
         }
-
-        logger.debug('solution', solution)
 
         exercise = await ExerciseModel.findByIdAndUpdate(
           exerciseId,

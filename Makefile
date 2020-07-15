@@ -23,7 +23,7 @@ watch:
 	$(AUTH) logs -f --tail=100 $(ARGS)
 
 bash:
-	$(AUTH) exec $(ARGS) sh
+	$(AUTH) exec $(ARGS) bash
 
 container-ip:
 	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $$($(AUTH) ps -q $$ARGS)

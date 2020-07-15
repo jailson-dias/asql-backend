@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import generate from 'nanoid/generate';
+import {customRandom, random} from 'nanoid';
 const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 let Schema = mongoose.Schema;
@@ -9,7 +9,7 @@ let exerciseSchema = new Schema({
     type: String,
     unique: true,
     required: true,
-    default: () => generate(alphabet, 10),
+    default: customRandom(alphabet, 10, random),
   },
   title: {
     type: String,
