@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import {customRandom, random} from 'nanoid';
-const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 
 let Schema = mongoose.Schema;
 

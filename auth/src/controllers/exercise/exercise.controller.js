@@ -22,7 +22,7 @@ class Exercise {
     const exercise = new ExerciseModel({
       title,
       description,
-      dateLimit,
+      dateLimit: moment(dateLimit, "DD/MM/YYYY"),
     });
     return exercise
       .save()

@@ -7,8 +7,8 @@ class FormatMongooseErrors {
 
     const formatedErrors = errorFields.map((field) => {
       return {
-        field: mongoErros[field].properties.path,
-        message: mongoErros[field].properties.message,
+        field: mongoErros[field].path || mongoErros[field].properties.path,
+        message: mongoErros[field].message || mongoErros[field].properties.message,
       };
     });
 

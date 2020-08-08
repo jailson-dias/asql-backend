@@ -25,9 +25,10 @@ const formatValidationError = (mongoErros) => {
   const errorFields = Object.keys(mongoErros);
   logger.debug('Mongo validation errors', errorFields);
   const formatedErrors = errorFields.map((field) => {
+    console.log("errors validation", field)
     return {
-      field: mongoErros[field].properties.path,
-      message: mongoErros[field].properties.message,
+      field: mongoErros[field].path || mongoErros[field].properties.path,
+      message: mongoErros[field].message || mongoErros[field].properties.message,
     };
   });
   const response = formatResponse({
